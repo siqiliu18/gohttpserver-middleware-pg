@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-svc3
+spec:
+  selector:
+    app: app-svc3
+  type: NodePort
+  ports:
+    - port: 8090
+      targetPort: 8090
+      nodePort: 30134
+      protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-svc3
+  labels:
+    app: app-svc3
+spec:
+  selector:
+    matchLabels:
+      app: app-svc3
+  template:
+    metadata:
+      labels:
+        app: app-svc3
+    spec:
+      containers:
+        - name: app-svc3
+          image: app-svc3-image
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8090
+          # env:
+          #   - name: CONFIG_DBHOST
+          #     valueFrom:
+          #       configMapKeyRef:
+          #         key: dbHost
+          #         name: app-cm3
+          #   - name: CONFIG_DBPASS
+          #     valueFrom:
+          #       secretKeyRef:
+          #         key: dbpassword
+          #         name: app-secret3

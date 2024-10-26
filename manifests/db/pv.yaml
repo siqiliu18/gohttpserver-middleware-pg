@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: db-pv4
+  namespace: db-ns4
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  capacity:
+    storage: 2Gi
+  hostPath:
+    path: /data/postgresql

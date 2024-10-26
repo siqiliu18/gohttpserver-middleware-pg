@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-psql4
+  namespace: db-ns4
+spec:
+  selector:
+    app: db-psql4
+  ports:
+    - port: 5432
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db-psql4
+  namespace: db-ns4
+spec:
+  selector:
+    matchLabels:
+      app: db-psql4
+  serviceName: db-psql4
+  template:
+    metadata:
+      labels:
+        app: db-psql4
+    spec:
+      containers:
+        - name: db-psql4
+          image: postgres:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: dbpassword
+                  name: db-secret4
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: db-pvc4
+      volumes:
+        - name: db-pvc4
+          persistentVolumeClaim:
+            claimName: db-pvc4
